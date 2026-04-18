@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SEEN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SEEN">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2A1218">
+<style>
+:root{--base:#2A1218;--surf:#3D1A24;--surf2:#4A2030;--bord:#6B2D3E;--rose:#F2A0BC;--rosed:#C87898;--blue:#A8D4E8;--bluel:#C8E8F5;--cream:#F7E8EC;--creamm:rgba(247,232,236,0.6);--creamf:rgba(247,232,236,0.22);--hubbtn:#5A2535;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--base);color:var(--cream);font-family:Jost,sans-serif;font-weight:300;min-height:100vh;max-width:430px;margin:0 auto;overflow-x:hidden;}
+.screen{display:none;min-height:100vh;position:relative;z-index:1;flex-direction:column;}
+.screen.active{display:flex;animation:fu 0.4s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.sc{flex:1;overflow-y:auto;padding:0 24px 80px;}
+.sbar{height:40px;display:flex;align-items:center;padding:0 24px;flex-shrink:0;justify-content:space-between;}
+.disp{font-family:"Cormorant Garamond",serif;font-size:34px;font-weight:300;font-style:italic;line-height:1.2;color:var(--cream);margin-bottom:12px;}
+.dispsm{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:300;font-style:italic;line-height:1.3;color:var(--cream);}
+.slbl{font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--rose);opacity:0.6;margin-bottom:12px;}
+.slbl-b{font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--blue);opacity:0.7;margin-bottom:12px;}
+.bt{font-size:15px;line-height:1.85;color:var(--creamm);}
+.bt p{margin-bottom:13px;}.bt p:last-child{margin-bottom:0;}
+.btb{font-size:15px;line-height:1.85;color:rgba(200,232,245,0.7);}
+.btb p{margin-bottom:13px;}
+.btn{display:block;width:100%;padding:16px;font-family:Jost,sans-serif;font-size:12px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;border:none;cursor:pointer;transition:all 0.25s;text-align:center;border-radius:2px;text-decoration:none;}
+.btnp{background:linear-gradient(135deg,var(--rosed),var(--rose));color:var(--base);}
+.btnp:hover{opacity:0.9;}
+.btno{background:transparent;color:var(--rose);border:1px solid rgba(242,160,188,0.3);margin-top:10px;}
+.btno:hover{border-color:var(--rose);}
+.btnob{background:transparent;color:var(--blue);border:1px solid rgba(168,212,232,0.3);display:block;width:100%;padding:15px;font-family:Jost,sans-serif;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;text-align:center;border-radius:2px;margin-top:10px;transition:all 0.25s;}
+.btng{background:transparent;color:var(--creamm);font-size:12px;padding:11px;margin-top:6px;width:100%;font-family:Jost,sans-serif;border:none;cursor:pointer;}
+.btnd{background:transparent;color:rgba(242,160,188,0.5);border:1px solid rgba(242,160,188,0.15);font-size:12px;padding:14px;margin-top:8px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;width:100%;font-family:Jost,sans-serif;transition:all 0.2s;display:block;}
+.btnd:hover{border-color:rgba(242,160,188,0.35);color:var(--rose);}
+.btnhub{display:flex;align-items:center;gap:16px;background:var(--hubbtn);border:1px solid rgba(242,160,188,0.15);border-radius:12px;padding:18px 20px;width:100%;cursor:pointer;transition:all 0.22s;margin-bottom:10px;text-align:left;}
+.btnhub:hover{background:#6B2D3E;border-color:rgba(242,160,188,0.3);}
+.hubicon{width:36px;height:36px;border-radius:8px;background:rgba(242,160,188,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hubicon svg{width:18px;height:18px;stroke:var(--rose);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.hubtxt{font-family:Jost,sans-serif;font-size:14px;font-weight:400;color:var(--cream);}
+.hubsub{font-size:11px;color:var(--creamm);margin-top:2px;}
+.card{background:var(--surf);border:1px solid rgba(107,45,62,0.6);border-radius:12px;padding:20px;margin-bottom:13px;}
+.cardg{background:linear-gradient(135deg,rgba(107,45,62,0.6),rgba(61,26,36,0.8));border:1px solid rgba(242,160,188,0.16);border-radius:12px;padding:22px;margin-bottom:13px;}
+.cardb{background:rgba(26,44,56,0.8);border:1px solid rgba(168,212,232,0.15);border-radius:12px;padding:20px;margin-bottom:13px;}
+.cardbd{background:rgba(15,30,40,0.9);border:1px solid rgba(168,212,232,0.2);border-radius:12px;padding:22px;margin-bottom:13px;}
+.div{height:1px;background:rgba(107,45,62,0.4);margin:18px 0;}
+.divb{height:1px;background:rgba(168,212,232,0.15);margin:18px 0;}
+.pdots{display:flex;justify-content:center;gap:16px;margin:26px 0;}
+.pdot{width:13px;height:13px;border-radius:50%;border:1px solid var(--rosed);transition:all 0.2s;}
+.pdot.on{background:var(--rose);border-color:var(--rose);}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:268px;margin:0 auto;}
+.pkey{background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:10px;padding:16px;font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:300;color:var(--cream);cursor:pointer;transition:all 0.2s;text-align:center;}
+.pkey:hover{background:var(--surf2);border-color:var(--rose);}
+.pkey.del{font-size:13px;font-family:Jost,sans-serif;color:var(--rosed);}
+.pbar{height:2px;background:rgba(107,45,62,0.4);border-radius:2px;margin-bottom:30px;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--rosed),var(--rose));border-radius:2px;transition:width 0.4s;}
+.opt{background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:10px;padding:15px 17px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;font-size:14px;line-height:1.6;color:var(--creamm);text-align:left;width:100%;font-family:Jost,sans-serif;font-weight:300;}
+.opt:hover{border-color:rgba(242,160,188,0.4);color:var(--cream);}
+.opt.sel{border-color:var(--rose);color:var(--cream);background:rgba(242,160,188,0.07);}
+.dbadge{display:inline-flex;align-items:center;gap:7px;background:rgba(242,160,188,0.09);border:1px solid rgba(242,160,188,0.18);border-radius:20px;padding:5px 13px;font-size:11px;color:var(--rose);letter-spacing:0.08em;margin-bottom:16px;}
+.dbadgeb{display:inline-flex;align-items:center;gap:7px;background:rgba(168,212,232,0.09);border:1px solid rgba(168,212,232,0.2);border-radius:20px;padding:5px 13px;font-size:11px;color:var(--blue);letter-spacing:0.08em;margin-bottom:16px;}
+.tabbar{display:flex;border-bottom:1px solid rgba(107,45,62,0.4);margin-bottom:18px;overflow-x:auto;scrollbar-width:none;}
+.tabbarb{display:flex;border-bottom:1px solid rgba(168,212,232,0.18);margin-bottom:18px;overflow-x:auto;scrollbar-width:none;}
+.tabbar::-webkit-scrollbar,.tabbarb::-webkit-scrollbar{display:none;}
+.tab{background:none;border:none;color:var(--creamm);font-family:Jost,sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.2s;}
+.tab:hover{color:var(--rose);}.tab.active{color:var(--rose);border-bottom-color:var(--rose);}
+.tabb{background:none;border:none;color:rgba(168,212,232,0.5);font-family:Jost,sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.2s;}
+.tabb:hover{color:var(--blue);}.tabb.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tp{display:none;}.tp.active{display:block;animation:fu 0.3s ease;}
+.dcard{background:var(--surf);border:1px solid rgba(107,45,62,0.6);border-radius:13px;overflow:hidden;margin-bottom:13px;}
+.dcardh{background:var(--surf2);padding:13px 17px;border-bottom:1px solid rgba(107,45,62,0.4);}
+.dcardl{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--rose);opacity:0.7;}
+.dcardb{padding:17px;}
+.dcardt{font-family:"Cormorant Garamond",serif;font-size:18px;font-style:italic;font-weight:300;line-height:1.65;color:var(--cream);}
+.scrib{background:linear-gradient(135deg,rgba(168,212,232,0.07),rgba(61,26,36,0.6));border:1px solid rgba(168,212,232,0.13);border-radius:12px;padding:20px;margin-bottom:13px;text-align:center;}
+.scribt{font-family:"Cormorant Garamond",serif;font-size:18px;font-style:italic;font-weight:300;line-height:1.7;color:var(--cream);margin-bottom:9px;}
+.scribr{font-size:11px;color:var(--blue);letter-spacing:0.13em;opacity:0.8;}
+.wfbanner{background:linear-gradient(135deg,rgba(168,212,232,0.12),rgba(26,44,56,0.9));border:1px solid rgba(168,212,232,0.25);border-radius:14px;padding:22px 24px;margin-bottom:18px;border-left:3px solid var(--blue);}
+.wflbl{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--blue);opacity:0.8;margin-bottom:8px;}
+.wftitle{font-family:"Cormorant Garamond",serif;font-size:22px;font-style:italic;color:var(--cream);margin-bottom:6px;line-height:1.3;}
+.wfdesc{font-size:13px;color:rgba(200,232,245,0.65);line-height:1.6;}
+.affcard{background:rgba(242,160,188,0.06);border:1px solid rgba(242,160,188,0.18);border-radius:14px;overflow:hidden;margin-bottom:14px;}
+.affcardh{background:rgba(242,160,188,0.08);padding:12px 18px;border-bottom:1px solid rgba(168,212,232,0.1);}
+.affcardl{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--rose);opacity:0.8;}
+.affcardb{padding:18px;}
+.affcardt{font-family:"Cormorant Garamond",serif;font-size:19px;font-style:italic;font-weight:300;line-height:1.7;color:var(--cream);}
+.propcard{background:rgba(26,44,56,0.7);border:1px solid rgba(168,212,232,0.12);border-radius:14px;overflow:hidden;margin-bottom:14px;}
+.propcardh{background:rgba(168,212,232,0.07);padding:12px 18px;border-bottom:1px solid rgba(168,212,232,0.1);}
+.propcardl{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);opacity:0.8;}
+.propcardb{padding:18px;}
+.propcardt{font-family:"Cormorant Garamond",serif;font-size:18px;font-style:italic;font-weight:300;line-height:1.7;color:rgba(200,232,245,0.9);}
+.bring{width:128px;height:128px;border-radius:50%;border:1.5px solid rgba(168,212,232,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;cursor:pointer;transition:all 0.3s;}
+.bring:hover{border-color:rgba(168,212,232,0.6);}
+.bring.go{animation:bp 16s ease-in-out infinite;}
+@keyframes bp{0%,100%{transform:scale(1);border-color:rgba(168,212,232,0.3);}25%{transform:scale(1.18);border-color:rgba(168,212,232,0.7);}50%{transform:scale(1.08);border-color:rgba(168,212,232,0.5);}75%{transform:scale(0.96);border-color:rgba(242,160,188,0.4);}}
+.brinn{width:75px;height:75px;border-radius:50%;background:radial-gradient(circle,rgba(168,212,232,0.11),transparent);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;}
+.brword{font-family:"Cormorant Garamond",serif;font-size:15px;font-style:italic;color:var(--blue);}
+.brct{font-size:10px;color:rgba(168,212,232,0.6);}
+.bdrop{background:rgba(26,44,56,0.7);border:1px solid rgba(168,212,232,0.12);border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color 0.2s;}
+.bdrop.open{border-color:rgba(168,212,232,0.3);}
+.bdrop.sel{border-color:rgba(168,212,232,0.45);background:rgba(168,212,232,0.06);}
+.bdph{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;gap:12px;}
+.bdpname{font-family:"Cormorant Garamond",serif;font-size:17px;font-style:italic;color:rgba(200,232,245,0.85);margin-bottom:3px;}
+.bdpwhen{font-size:11px;color:rgba(168,212,232,0.5);letter-spacing:0.04em;}
+.bdpbody{padding:0 16px 16px;}
+.bdpdesc{font-size:13px;line-height:1.65;color:rgba(200,232,245,0.6);margin-bottom:10px;}
+.bdpcts{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);opacity:0.7;margin-bottom:12px;}
+.bselb{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue);background:rgba(168,212,232,0.1);border:1px solid rgba(168,212,232,0.25);border-radius:10px;padding:3px 8px;white-space:nowrap;}
+.busebtn{background:rgba(168,212,232,0.08);border:1px solid rgba(168,212,232,0.25);border-radius:6px;color:var(--blue);font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;padding:9px 16px;cursor:pointer;transition:all 0.2s;width:100%;}
+.busebtn:hover{background:rgba(168,212,232,0.14);}
+.busebtn.on{background:rgba(168,212,232,0.15);border-color:var(--blue);color:var(--cream);}
+.jta{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(107,45,62,0.5);border-radius:10px;color:var(--cream);font-family:Jost,sans-serif;font-size:14px;font-weight:300;line-height:1.8;padding:14px;resize:vertical;min-height:130px;outline:none;transition:border-color 0.2s;}
+.jta:focus{border-color:rgba(242,160,188,0.44);}
+.jta::placeholder{color:rgba(247,232,236,0.18);}
+.jtab{width:100%;background:rgba(168,212,232,0.04);border:1px solid rgba(168,212,232,0.2);border-radius:10px;color:var(--cream);font-family:Jost,sans-serif;font-size:14px;font-weight:300;line-height:1.8;padding:14px;resize:vertical;min-height:130px;outline:none;transition:border-color 0.2s;}
+.jtab:focus{border-color:rgba(168,212,232,0.45);}
+.jtab::placeholder{color:rgba(168,212,232,0.2);}
+.btnpb{background:linear-gradient(135deg,#4A88A8,var(--blue));color:#0F1E28;display:block;width:100%;padding:16px;font-family:Jost,sans-serif;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;margin-top:10px;}
+.jecard{background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:10px;padding:16px;margin-bottom:10px;}
+.jedate{font-size:10px;letter-spacing:0.13em;color:var(--rose);opacity:0.6;margin-bottom:6px;text-transform:uppercase;}
+.jetext{font-size:13px;line-height:1.7;color:var(--creamm);}
+.vcard{background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:10px;padding:15px;margin-bottom:10px;}
+.vdate{font-size:10px;letter-spacing:0.13em;color:var(--rose);opacity:0.6;margin-bottom:5px;text-transform:uppercase;}
+.vtext{font-size:13px;line-height:1.7;color:var(--creamm);}
+.pname{font-family:"Cormorant Garamond",serif;font-size:46px;font-weight:300;font-style:italic;line-height:1.05;color:var(--cream);margin-bottom:5px;}
+.pdesc{font-size:12px;color:var(--rose);letter-spacing:0.08em;opacity:0.7;margin-bottom:26px;}
+.pword{border-left:2px solid var(--rosed);padding:17px 17px 17px 21px;background:rgba(242,160,188,0.04);border-radius:0 9px 9px 0;margin-bottom:20px;font-family:"Cormorant Garamond",serif;font-size:17px;font-style:italic;line-height:1.8;color:var(--creamm);}
+.reccard{background:linear-gradient(135deg,var(--surf2),var(--surf));border:1px solid rgba(242,160,188,0.17);border-radius:13px;padding:22px;margin-bottom:13px;text-align:center;}
+.rectag{font-size:9px;letter-spacing:0.24em;text-transform:uppercase;color:var(--rose);opacity:0.6;margin-bottom:9px;}
+.rectitle{font-family:"Cormorant Garamond",serif;font-size:24px;font-style:italic;color:var(--cream);margin-bottom:7px;}
+.recdesc{font-size:13px;color:var(--creamm);line-height:1.7;margin-bottom:16px;}
+.backbtn{background:none;border:none;color:var(--rosed);font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;padding:0;margin-bottom:24px;display:flex;align-items:center;gap:5px;}
+.backbtnb{background:none;border:none;color:rgba(168,212,232,0.6);font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;padding:0;margin-bottom:24px;display:flex;align-items:center;gap:5px;}
+.infield{width:100%;background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:10px;color:var(--cream);font-family:Jost,sans-serif;font-size:15px;font-weight:300;padding:14px;outline:none;transition:border-color 0.2s;margin-bottom:6px;}
+.infield:focus{border-color:rgba(242,160,188,0.5);}
+.inlbl{font-size:10px;letter-spacing:0.17em;text-transform:uppercase;color:var(--rose);opacity:0.6;margin-bottom:8px;display:block;}
+.inwrap{margin-bottom:18px;}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid rgba(107,45,62,0.3);}
+.prowlbl{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--creamm);}
+.prowval{font-size:14px;color:var(--cream);}
+.smsg{font-size:13px;color:var(--blue);text-align:center;margin-top:10px;min-height:18px;}
+.emsg{font-size:13px;color:var(--rosed);text-align:center;margin-top:10px;min-height:18px;}
+.rmaptitle{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rose);opacity:0.7;margin-bottom:14px;}
+.rmaprow{display:flex;align-items:stretch;margin-bottom:3px;}
+.rmapcol{display:flex;flex-direction:column;align-items:center;width:30px;flex-shrink:0;}
+.rmapnode{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--bord);background:var(--base);flex-shrink:0;margin-top:5px;transition:all 0.3s;}
+.rmapnode.act{background:var(--rose);border-color:var(--rose);box-shadow:0 0 9px rgba(242,160,188,0.4);}
+.rmapnode.done{background:var(--blue);border-color:var(--blue);}
+.rmapline{width:1.5px;flex:1;background:rgba(107,45,62,0.35);margin:2px 0;}
+.rmapline.done{background:rgba(168,212,232,0.35);}
+.rmapline.act{background:rgba(242,160,188,0.35);}
+.rmapcard{flex:1;background:var(--surf);border:1px solid rgba(107,45,62,0.4);border-radius:9px;padding:12px 15px;margin-left:9px;margin-bottom:7px;transition:all 0.2s;}
+.rmapcard.act{border-color:rgba(242,160,188,0.4);background:rgba(242,160,188,0.05);}
+.rmapcard.done{border-color:rgba(168,212,232,0.18);}
+.rmaplbl{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:3px;}
+.rmapname{font-size:13px;color:var(--cream);margin-bottom:3px;font-weight:300;}
+.rmapdesc{font-size:11px;color:var(--creamm);line-height:1.5;}
+.rmapdays{font-size:9px;margin-top:4px;letter-spacing:0.08em;}
+.phdiv{display:flex;align-items:center;gap:10px;margin:18px 0;}
+.phdivl{flex:1;height:1px;background:rgba(107,45,62,0.28);}
+.phdivc{width:7px;height:7px;border-radius:50%;background:var(--bord);}
+.brantop{font-family:"Cormorant Garamond",serif;font-size:11px;letter-spacing:0.35em;color:var(--rose);opacity:0.5;text-transform:uppercase;}
+.delbtn{background:none;border:none;color:rgba(242,160,188,0.28);font-size:10px;cursor:pointer;margin-top:9px;padding:0;font-family:Jost,sans-serif;letter-spacing:0.1em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="screen active" id="s-splash">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 28px;text-align:center;">
+    <svg width="50" height="46" viewBox="0 0 52 48" fill="none" style="margin-bottom:18px;">
+      <path d="M26 42C26 42 6 29 6 15C6 8.5 11 5 17 5C21 5 24 7 26 10L26 42Z" fill="#F2A0BC" opacity="0.85"/>
+      <path d="M26 42C26 42 46 29 46 15C46 8.5 41 5 35 5C31 5 28 7 26 10L26 42Z" fill="#A8D4E8" opacity="0.75"/>
+      <circle cx="19" cy="4" r="2.5" fill="#F2A0BC" opacity="0.5"/>
+      <circle cx="33" cy="4" r="2.5" fill="#A8D4E8" opacity="0.5"/>
+    </svg>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:66px;font-weight:300;letter-spacing:0.22em;color:var(--cream);line-height:1;margin-bottom:10px;">SEEN</div>
+    <div style="font-size:12px;color:var(--rose);letter-spacing:0.13em;opacity:0.8;margin-bottom:7px;">Who you are is more than enough.</div>
+    <div style="font-size:10px;color:var(--creamm);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:44px;">Healing after betrayal</div>
+    <button class="btn btnp" onclick="goTo('s-create')">Begin Your Journey</button>
+    <button class="btn btno" onclick="goTo('s-login')">I Already Have an Account</button>
+    <div style="margin-top:26px;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:0.3em;color:var(--rose);opacity:0.35;text-transform:uppercase;">by Good Girl Heartbreak</div>
+  </div>
+</div>
+
+<!-- PWA INSTALL BAR -->
+<div id="install-bar" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surf);border-top:1px solid rgba(242,160,188,0.2);padding:14px 24px;align-items:center;justify-content:space-between;gap:12px;z-index:999;">
+  <div>
+    <div style="font-size:13px;color:var(--cream);font-weight:400;">Add SEEN to your home screen</div>
+    <div style="font-size:11px;color:var(--creamm);margin-top:2px;">Opens like an app, no browser bar</div>
+  </div>
+  <button onclick="installApp()" style="background:linear-gradient(135deg,var(--rosed),var(--rose));color:var(--base);border:none;padding:10px 20px;font-family:Jost,sans-serif;font-size:11px;font-weight:400;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;">Install</button>
+</div>
+
+<!-- CREATE ACCOUNT -->
+<div class="screen" id="s-create">
+  <div class="sbar"></div>
+  <div class="sc" style="padding-top:52px;">
+    <button class="backbtn" onclick="goTo('s-splash')">Back</button>
+    <div class="slbl">Welcome</div>
+    <div class="disp">Create your<br>safe space.</div>
+    <div class="bt" style="margin-bottom:26px;"><p>Your name and passcode keep this space yours. Nobody else gets in.</p></div>
+    <div class="inwrap">
+      <label class="inlbl">Your First Name</label>
+      <input id="cname" type="text" placeholder="Enter your name" class="infield"/>
+    </div>
+    <div class="inwrap">
+      <label class="inlbl">Your Email</label>
+      <input id="cemail" type="email" placeholder="Enter your email" class="infield"/>
+    </div>
+    <button class="btn btnp" onclick="goPasscode()">Continue</button>
+  </div>
+</div>
+
+<!-- CREATE PASSCODE -->
+<div class="screen" id="s-passcode">
+  <div class="sbar"></div>
+  <div style="padding:52px 24px 0;flex:1;display:flex;flex-direction:column;">
+    <div class="slbl">Your Passcode</div>
+    <div class="disp" style="margin-bottom:6px;">Choose your<br>4-digit code.</div>
+    <div class="bt" style="margin-bottom:4px;"><p>This is how you return to your healing space each time.</p></div>
+    <div class="pdots" id="cdots">
+      <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+    </div>
+    <div class="pgrid">
+      <button class="pkey" onclick="pin('c',1)">1</button><button class="pkey" onclick="pin('c',2)">2</button><button class="pkey" onclick="pin('c',3)">3</button>
+      <button class="pkey" onclick="pin('c',4)">4</button><button class="pkey" onclick="pin('c',5)">5</button><button class="pkey" onclick="pin('c',6)">6</button>
+      <button class="pkey" onclick="pin('c',7)">7</button><button class="pkey" onclick="pin('c',8)">8</button><button class="pkey" onclick="pin('c',9)">9</button>
+      <button class="pkey" onclick="pin('c',0)" style="grid-column:2;">0</button>
+      <button class="pkey del" onclick="pdel('c')">del</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="s-login">
+  <div class="sbar"></div>
+  <div style="padding:52px 24px 0;flex:1;display:flex;flex-direction:column;">
+    <button class="backbtn" onclick="goTo('s-splash')">Back</button>
+    <div class="slbl">Welcome Back</div>
+    <div class="disp" style="margin-bottom:6px;">She returns.<br>She heals.</div>
+    <div class="bt" style="margin-bottom:16px;"><p>Enter your email and 4-digit passcode to access your account.</p></div>
+    <div class="inwrap" style="margin-bottom:20px;">
+      <label class="inlbl">Your Email</label>
+      <input id="lemail" type="email" placeholder="Enter your email" class="infield"/>
+    </div>
+    <div class="pdots" id="ldots">
+      <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+    </div>
+    <div class="pgrid">
+      <button class="pkey" onclick="pin('l',1)">1</button><button class="pkey" onclick="pin('l',2)">2</button><button class="pkey" onclick="pin('l',3)">3</button>
+      <button class="pkey" onclick="pin('l',4)">4</button><button class="pkey" onclick="pin('l',5)">5</button><button class="pkey" onclick="pin('l',6)">6</button>
+      <button class="pkey" onclick="pin('l',7)">7</button><button class="pkey" onclick="pin('l',8)">8</button><button class="pkey" onclick="pin('l',9)">9</button>
+      <button class="pkey" onclick="pin('l',0)" style="grid-column:2;">0</button>
+      <button class="pkey del" onclick="pdel('l')">del</button>
+    </div>
+    <div id="lerr" class="emsg" style="text-align:center;margin-top:14px;"></div>
+
+    <div style="margin-top:24px;text-align:center;">
+      <button onclick="toggleRestore()" style="background:none;border:none;color:var(--creamm);font-family:Jost,sans-serif;font-size:12px;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Restore from backup code</button>
+    </div>
+
+    <div id="restore-panel" style="display:none;margin-top:20px;background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:12px;padding:20px;">
+      <div style="font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--rose);opacity:0.6;margin-bottom:8px;">Restore Your Account</div>
+      <div style="font-size:13px;color:var(--creamm);line-height:1.7;margin-bottom:14px;">Paste your backup code below to restore your account on this device.</div>
+      <textarea id="login-restore-input" class="jta" placeholder="Paste your backup code here" style="min-height:80px;font-size:11px;font-family:monospace;margin-bottom:10px;"></textarea>
+      <button class="btn btnp" onclick="loginRestore()">Restore and Enter</button>
+      <div id="login-restore-msg" class="emsg" style="margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- VALIDATION -->
+<div class="screen" id="s-validate">
+  <div class="sbar"></div>
+  <div class="sc" style="padding-top:52px;">
+    <div style="text-align:center;margin-bottom:22px;">
+      <svg width="42" height="38" viewBox="0 0 52 48" fill="none">
+        <path d="M26 42C26 42 6 29 6 15C6 8.5 11 5 17 5C21 5 24 7 26 10L26 42Z" fill="#F2A0BC" opacity="0.85"/>
+        <path d="M26 42C26 42 46 29 46 15C46 8.5 41 5 35 5C31 5 28 7 26 10L26 42Z" fill="#A8D4E8" opacity="0.75"/>
+      </svg>
+    </div>
+    <div class="slbl" style="text-align:center;">Before We Begin</div>
+    <div class="disp" style="text-align:center;margin-bottom:22px;">Hear this<br>first.</div>
+    <div class="bt">
+      <p>You are not alone.</p>
+      <p>You are not crazy.</p>
+      <p>Take a breath. This is your safe space to make sense of a situation that makes absolutely no sense.</p>
+      <p>Your world has come crashing down. Your spouse cheated emotionally or physically over an extended period of time. He may have had an outside child because of it.</p>
+      <p>You are not okay. And you do not have to be.</p>
+      <p>Your emotions are valid. Every single one of them. The rage. The grief. The confusion. The days you can barely get out of bed and the days you feel fine and then feel guilty for feeling fine.</p>
+      <p>God is big enough to handle your emotions. The good, the bad, and the ugly. Bring it all.</p>
+    </div>
+    <div class="div"></div>
+    <div class="bt" style="margin-bottom:32px;font-style:italic;">
+      <p>Choosing to stay today does not always mean choosing to stay tomorrow. And that is okay. Your healing is the priority.</p>
+    </div>
+    <button class="btn btnp" onclick="startAssessment()" style="margin-bottom:32px;">I Am Ready</button>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div class="screen" id="s-assess">
+  <div class="sbar"></div>
+  <div class="sc" style="padding-top:52px;">
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+      <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rose);opacity:0.6;" id="qlbl">Question 1 of 10</span>
+      <span style="font-size:10px;color:var(--creamm);" id="qpct">10%</span>
+    </div>
+    <div class="pbar"><div class="pfill" id="qprog" style="width:10%;"></div></div>
+    <div class="disp" id="qtxt" style="margin-bottom:26px;font-size:26px;"></div>
+    <div id="qopts"></div>
+    <div style="margin-top:18px;padding-bottom:18px;">
+      <button class="backbtn" id="qback" onclick="prevQ()" style="margin-bottom:0;">Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- PATH REVEAL -->
+<div class="screen" id="s-path">
+  <div class="sbar"></div>
+  <div class="sc" style="padding-top:52px;">
+    <div style="display:inline-flex;align-items:center;background:rgba(242,160,188,0.08);border:1px solid rgba(242,160,188,0.2);border-radius:20px;padding:5px 13px;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--rose);opacity:0.8;margin-bottom:14px;">Your Healing Path</div>
+    <div class="pname" id="pathname"></div>
+    <div class="pdesc" id="pathdesc"></div>
+    <div class="pword" id="pathword"></div>
+    <div class="slbl" style="margin-bottom:13px;">Your First Three Steps</div>
+    <div id="pathsteps"></div>
+    <button class="btn btnp" onclick="goHub()" style="margin-top:8px;">Enter Your Healing Space</button>
+    <button class="btn btng" onclick="startAssessment()">Retake Assessment</button>
+  </div>
+</div>
+
+<!-- HUB -->
+<div class="screen" id="s-hub" style="background:linear-gradient(160deg,#2A1218 0%,#3A1520 50%,#2E1018 100%);">
+  <div class="sbar">
+    <div class="brantop">SEEN</div>
+    <button onclick="goTo('s-profile')" style="background:none;border:none;cursor:pointer;color:var(--rosed);font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;opacity:0.7;">Profile</button>
+  </div>
+  <div class="sc" style="padding-top:20px;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;font-style:italic;line-height:1.2;color:var(--cream);margin-bottom:4px;" id="hubgreet">Good morning.</div>
+    <div class="dbadge"><span id="hubday">Day 1 of 90</span></div>
+    <div style="font-size:13px;color:var(--creamm);margin-bottom:22px;">Where would you like to go today?</div>
+    <button class="btnhub" onclick="goTo('s-today')">
+      <div class="hubicon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div><div class="hubtxt">What I Do Today</div><div class="hubsub">Daily affirmation, scripture, breathing and journal</div></div>
+    </button>
+    <button class="btnhub" onclick="goTo('s-roadmap')">
+      <div class="hubicon"><svg viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M9 3v15"/><path d="M15 6v15"/></svg></div>
+      <div><div class="hubtxt">Check My Roadmap</div><div class="hubsub">See your 90-day healing journey and where you are</div></div>
+    </button>
+    <button class="btnhub" onclick="goTo('s-recs')">
+      <div class="hubicon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <div><div class="hubtxt">See My Recommendations</div><div class="hubsub">Resources chosen for your healing path</div></div>
+    </button>
+    <button class="btnhub" onclick="goTo('s-community')">
+      <div class="hubicon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div><div class="hubtxt">Join the Community</div><div class="hubsub">Nearly 500 women healing alongside you</div></div>
+    </button>
+    <button class="btnhub" onclick="goTo('s-vent')">
+      <div class="hubicon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <div><div class="hubtxt">Vent Room</div><div class="hubsub">Say everything you have not been able to say</div></div>
+    </button>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(107,45,62,0.3);">
+      <div style="font-size:12px;color:var(--creamm);font-style:italic;font-family:'Cormorant Garamond',serif;text-align:center;margin-bottom:16px;">Who you are is more than enough.</div>
+      <button class="btnd" onclick="confirmRetake()">Retake Assessment</button>
+      <div id="retake-confirm" style="display:none;background:rgba(107,45,62,0.3);border:1px solid rgba(242,160,188,0.2);border-radius:10px;padding:16px;margin-top:8px;text-align:center;">
+        <div style="font-size:13px;color:var(--creamm);margin-bottom:12px;">This will update your healing path. Are you sure?</div>
+        <div style="display:flex;gap:10px;">
+          <button onclick="doRetake()" style="flex:1;background:linear-gradient(135deg,var(--rosed),var(--rose));color:var(--base);border:none;padding:12px;font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;">Yes, Retake</button>
+          <button onclick="confirmRetake()" style="flex:1;background:transparent;color:var(--creamm);border:1px solid rgba(242,160,188,0.2);padding:12px;font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;">Cancel</button>
+        </div>
+      </div>
+      <button class="btnd" onclick="doLogout()">Log Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- TODAY -->
+<div class="screen" id="s-today" style="background:linear-gradient(160deg,#0F1E28 0%,#152433 40%,#1A2C3A 100%);">
+  <div class="sbar" style="background:transparent;">
+    <button class="backbtnb" onclick="goTo('s-hub')">Back</button>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:0.35em;color:var(--blue);opacity:0.5;text-transform:uppercase;">SEEN</div>
+  </div>
+  <div class="sc">
+    <div class="slbl-b">Your Healing Space</div>
+    <div class="dbadgeb"><span id="todayday">Day 1 of 90</span></div>
+    <div class="tabbarb">
+      <button class="tabb active" onclick="swTab(this,'tp-today','ht')">Today</button>
+      <button class="tabb" onclick="swTab(this,'tp-breathe','ht')">Breathe</button>
+      <button class="tabb" onclick="swTab(this,'tp-journal','ht')">Journal</button>
+      <button class="tabb" onclick="swTab(this,'tp-entries','ht');renderJHistory()">All Entries</button>
+    </div>
+    <div id="tp-today" class="tp active" data-g="ht">
+      <div class="wfbanner">
+        <div class="wflbl">This Week Focus</div>
+        <div class="wftitle" id="wftitle"></div>
+        <div class="wfdesc" id="wfdesc"></div>
+      </div>
+      <div class="affcard">
+        <div class="affcardh"><div class="affcardl">Today Affirmation</div></div>
+        <div class="affcardb"><div class="affcardt" id="daff"></div></div>
+      </div>
+      <div class="scrib">
+        <div class="slbl-b" style="margin-bottom:5px;">Today Scripture</div>
+        <div class="scribt" id="dscr"></div>
+        <div class="scribr" id="dref"></div>
+      </div>
+      <div class="propcard">
+        <div class="propcardh"><div class="propcardl">Prophetic Encouragement</div></div>
+        <div class="propcardb"><div class="propcardt" id="dprop"></div></div>
+      </div>
+    </div>
+    <div id="tp-breathe" class="tp" data-g="ht">
+      <div style="text-align:center;margin-bottom:6px;">
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(168,212,232,0.5);margin-bottom:4px;">Now practicing</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--cream);margin-bottom:16px;" id="brtoolname">Box Breathing</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;padding:0 0 16px;">
+        <div class="bring" id="bring" onclick="toggleBr()">
+          <div class="brinn">
+            <div class="brword" id="brword">Tap</div>
+            <div class="brct" id="brct">to begin</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:rgba(168,212,232,0.6);text-align:center;margin-bottom:16px;" id="brphlbl">Tap the circle above to start</div>
+        <button class="btnob" onclick="toggleBr()" id="brbtn" style="max-width:260px;">Start Breathing</button>
+      </div>
+      <div class="divb"></div>
+      <div class="slbl-b" style="margin-bottom:12px;">Choose a Breathing Tool</div>
+      <div id="bdroplist"></div>
+    </div>
+    <div id="tp-journal" class="tp" data-g="ht">
+      <div class="cardbd" style="margin-bottom:16px;">
+        <div class="slbl-b">Today Prompt</div>
+        <div class="dispsm" id="jprompt" style="color:var(--cream);"></div>
+      </div>
+      <textarea class="jtab" placeholder="Write here. This space belongs to you." id="jentry"></textarea>
+      <button class="btnpb" onclick="saveJ()">Save Entry</button>
+    </div>
+    <div id="tp-entries" class="tp" data-g="ht">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div class="slbl-b" style="margin-bottom:0;">All Journal Entries</div>
+        <div style="font-size:11px;color:rgba(168,212,232,0.5);" id="jcount">0 entries</div>
+      </div>
+      <div id="jlist"></div>
+      <div id="jempty" style="text-align:center;padding:36px 0;">
+        <div class="dispsm" style="font-size:18px;margin-bottom:7px;color:rgba(200,232,245,0.7);">Nothing here yet.</div>
+        <div class="btb" style="font-size:14px;"><p>Your journal entries will appear here after you save them.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="screen" id="s-roadmap">
+  <div class="sbar">
+    <button class="backbtn" onclick="goTo('s-hub')">Back</button>
+    <div class="brantop">SEEN</div>
+  </div>
+  <div class="sc">
+    <div class="slbl">Your Journey</div>
+    <div class="disp" style="margin-bottom:4px;">90 Day<br>Roadmap.</div>
+    <div style="font-size:12px;color:var(--rose);margin-bottom:18px;opacity:0.7;" id="rmappathname"></div>
+    <div id="rmaplist"></div>
+  </div>
+</div>
+
+<!-- COMMUNITY -->
+<div class="screen" id="s-community">
+  <div class="sbar">
+    <button class="backbtn" onclick="goTo('s-hub')">Back</button>
+    <div class="brantop">SEEN</div>
+  </div>
+  <div class="sc">
+    <div class="slbl">Your Community</div>
+    <div class="disp" style="margin-bottom:8px;">You are not<br>alone in this.</div>
+    <div class="bt" style="margin-bottom:22px;"><p>Join nearly 500 women navigating healing after betrayal inside the Good Girl Heartbreak community.</p></div>
+    <div class="cardg" style="text-align:center;margin-bottom:14px;">
+      <div class="dispsm" style="margin-bottom:7px;">Good Girl Heartbreak</div>
+      <div class="bt" style="margin-bottom:16px;"><p>A faith-rooted community of women healing out loud together after betrayal.</p></div>
+      <a href="https://www.skool.com/you-deserve-to-heal-2263/about" target="_blank" class="btn btnp" style="display:block;">Join the Community</a>
+    </div>
+    <div class="card">
+      <div class="slbl">Inside the Community</div>
+      <div style="display:flex;flex-direction:column;gap:13px;margin-top:4px;">
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:4px;height:4px;border-radius:50%;background:var(--rose);margin-top:8px;flex-shrink:0;"></div><div class="bt" style="font-size:14px;">Live workshops on healing from Apostle Marquita</div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:4px;height:4px;border-radius:50%;background:var(--rose);margin-top:8px;flex-shrink:0;"></div><div class="bt" style="font-size:14px;">An unlimited healing resource vault</div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:4px;height:4px;border-radius:50%;background:var(--rose);margin-top:8px;flex-shrink:0;"></div><div class="bt" style="font-size:14px;">Monthly live check-ins</div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:4px;height:4px;border-radius:50%;background:var(--blue);margin-top:8px;flex-shrink:0;"></div><div class="bt" style="font-size:14px;">Nearly 500 women who understand what you are carrying</div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:4px;height:4px;border-radius:50%;background:var(--blue);margin-top:8px;flex-shrink:0;"></div><div class="bt" style="font-size:14px;">$27 annual membership</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="screen" id="s-recs">
+  <div class="sbar">
+    <button class="backbtn" onclick="goTo('s-hub')">Back</button>
+    <div class="brantop">SEEN</div>
+  </div>
+  <div class="sc">
+    <div class="slbl">Chosen For You</div>
+    <div class="disp" style="margin-bottom:8px;">Your next<br>step.</div>
+    <div class="bt" style="margin-bottom:22px;"><p>Based on where you are in your healing journey, these resources were chosen specifically for you.</p></div>
+    <div id="reclist"></div>
+  </div>
+</div>
+
+<!-- VENT ROOM -->
+<div class="screen" id="s-vent">
+  <div class="sbar">
+    <button class="backbtn" onclick="goTo('s-hub')">Back</button>
+    <div class="brantop">SEEN</div>
+  </div>
+  <div class="sc">
+    <div class="slbl">Vent Room</div>
+    <div class="disp" style="margin-bottom:8px;">Say everything<br>you need to say.</div>
+    <div class="bt" style="margin-bottom:18px;"><p>This space is yours. No judgment. No audience. Just you and your truth.</p></div>
+    <div class="tabbar">
+      <button class="tab active" onclick="swTab(this,'tp-vwrite','vt')">Write It Out</button>
+      <button class="tab" onclick="swTab(this,'tp-vlist','vt');renderVents()">My Vents</button>
+    </div>
+    <div id="tp-vwrite" class="tp active" data-g="vt">
+      <div class="cardg" style="margin-bottom:14px;">
+        <div class="slbl">What is on your heart right now?</div>
+        <div class="dispsm" style="font-size:17px;">You do not have to hold this in anymore.</div>
+      </div>
+      <textarea class="jta" style="min-height:160px;" placeholder="Say it. All of it. Nobody else sees this." id="vententry"></textarea>
+      <button class="btn btnp" style="margin-top:10px;" onclick="saveVent()">Save This Vent</button>
+    </div>
+    <div id="tp-vlist" class="tp" data-g="vt">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="slbl" style="margin-bottom:0;">Your Vents</div>
+        <div style="font-size:11px;color:var(--creamm);" id="vcount">0 entries</div>
+      </div>
+      <div id="vlist"></div>
+      <div id="vempty" style="text-align:center;padding:36px 0;">
+        <div class="dispsm" style="font-size:18px;margin-bottom:7px;">Nothing here yet.</div>
+        <div class="bt" style="font-size:14px;"><p>When you are ready to let it out, your vents will be saved here.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="s-profile">
+  <div class="sbar">
+    <button class="backbtn" onclick="goTo('s-hub')">Back</button>
+    <div class="brantop">SEEN</div>
+  </div>
+  <div class="sc" style="padding-top:52px;">
+    <div class="slbl">Your Profile</div>
+    <div class="disp" style="margin-bottom:20px;">Your<br>account.</div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="slbl">Account Info</div>
+      <div class="prow"><div class="prowlbl">Name</div><div class="prowval" id="pname"></div></div>
+      <div class="prow"><div class="prowlbl">Email</div><div class="prowval" id="pemail"></div></div>
+      <div class="prow" style="border-bottom:none;"><div class="prowlbl">Path</div><div class="prowval" id="ppath"></div></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="slbl">Update Email</div>
+      <div class="inwrap" style="margin-bottom:0;">
+        <label class="inlbl">New Email Address</label>
+        <input id="newemail" type="email" placeholder="Enter new email" class="infield"/>
+      </div>
+      <button class="btn btnp" style="margin-top:10px;" onclick="updEmail()">Update Email</button>
+      <div id="emsg" class="smsg"></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="slbl">Change Passcode</div>
+      <div class="bt" style="margin-bottom:14px;font-size:13px;"><p>Enter your current passcode then choose a new one.</p></div>
+      <div class="inwrap">
+        <label class="inlbl">Current Passcode</label>
+        <input id="curcode" type="password" maxlength="4" placeholder="Current 4-digit code" class="infield"/>
+      </div>
+      <div class="inwrap" style="margin-bottom:0;">
+        <label class="inlbl">New Passcode</label>
+        <input id="newcode" type="password" maxlength="4" placeholder="New 4-digit code" class="infield"/>
+      </div>
+      <button class="btn btnp" style="margin-top:10px;" onclick="updCode()">Update Passcode</button>
+      <div id="cmsg" class="smsg"></div>
+    </div>
+    <div class="card">
+      <div class="slbl">Forgot Your Passcode?</div>
+      <div class="bt" style="margin-bottom:14px;font-size:13px;"><p>Confirm your email to reset your passcode to 1234.</p></div>
+      <div class="inwrap" style="margin-bottom:0;">
+        <label class="inlbl">Confirm Your Email</label>
+        <input id="resetemail" type="email" placeholder="Enter your email" class="infield"/>
+      </div>
+      <button class="btn btno" style="margin-top:8px;" onclick="resetCode()">Reset Passcode</button>
+      <div id="rmsg" class="smsg"></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="slbl">Backup and Restore</div>
+      <div class="bt" style="margin-bottom:14px;font-size:13px;"><p>If you get a new phone or clear your browser, use this backup code to restore your account and all your data. Screenshot it or write it down and keep it safe.</p></div>
+      <button class="btn btnp" onclick="genBackup()" style="margin-bottom:10px;">Generate My Backup Code</button>
+      <div id="backup-display" style="display:none;margin-bottom:14px;">
+        <div style="font-size:10px;letter-spacing:0.17em;text-transform:uppercase;color:var(--rose);opacity:0.6;margin-bottom:8px;">Your Backup Code</div>
+        <div id="backup-code" style="background:rgba(0,0,0,0.3);border:1px solid rgba(242,160,188,0.2);border-radius:8px;padding:14px;font-size:11px;color:var(--cream);word-break:break-all;line-height:1.6;font-family:monospace;"></div>
+        <div style="font-size:11px;color:var(--creamm);margin-top:8px;">Screenshot this code and save it somewhere safe.</div>
+      </div>
+      <div class="div"></div>
+      <div class="slbl" style="margin-top:4px;">Restore From Backup</div>
+      <div class="inwrap" style="margin-bottom:0;">
+        <label class="inlbl">Paste Your Backup Code</label>
+        <textarea class="jta" id="restore-input" placeholder="Paste your backup code here" style="min-height:80px;font-size:11px;font-family:monospace;"></textarea>
+      </div>
+      <button class="btn btno" style="margin-top:8px;" onclick="restoreBackup()">Restore My Account</button>
+      <div id="restore-msg" class="smsg"></div>
+    </div>
+    <button class="btnd" onclick="doLogout()" style="margin-top:8px;">Log Out</button>
+  </div>
+</div>
+
+<script>
+var S={name:'',email:'',passcode:'',path:null,day:1,j:{},vents:[]};
+var cc='',lc='',cq=0,ans=[],isBr=false,brT=null,brS=0,selTool=0,openDrop=-1;
+
+function save(){try{localStorage.setItem('seen6',JSON.stringify(S));}catch(e){}}
+function load(){try{var s=localStorage.getItem('seen6');if(s){S=JSON.parse(s);return true;}}catch(e){}return false;}
+
+function goTo(id){
+  var els=document.querySelectorAll('.screen');
+  for(var i=0;i<els.length;i++){els[i].classList.remove('active');}
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='s-profile'){renderProfile();}
+}
+
+function swTab(btn,pid,g){
+  var ps=document.querySelectorAll('[data-g="'+g+'"]');
+  for(var i=0;i<ps.length;i++){ps[i].classList.remove('active');}
+  var tb=btn.closest('.tabbar')||btn.closest('.tabbarb');
+  if(tb){var ts=tb.querySelectorAll('.tab,.tabb');for(var i=0;i<ts.length;i++){ts[i].classList.remove('active');}}
+  btn.classList.add('active');
+  document.getElementById(pid).classList.add('active');
+}
+
+function goPasscode(){
+  var n=document.getElementById('cname').value.trim();
+  var e=document.getElementById('cemail').value.trim();
+  if(!n||!e){alert('Please enter your name and email.');return;}
+  S.name=n;S.email=e;cc='';dots('c',0);goTo('s-passcode');
+}
+
+function pin(m,n){
+  if(m==='c'){
+    if(cc.length>=4)return;
+    cc+=n;dots('c',cc.length);
+    if(cc.length===4){S.passcode=cc;S.day=1;save();setTimeout(function(){goTo('s-validate');},300);}
+  } else {
+    if(lc.length>=4)return;
+    lc+=n;dots('l',lc.length);
+    if(lc.length===4){
+      var lemailEl=document.getElementById('lemail');
+      var lev=lemailEl?lemailEl.value.trim().toLowerCase():'';
+      var emailOk=(!S.email)||(lev===S.email.toLowerCase());
+      if(lc===S.passcode&&emailOk){
+        document.getElementById('lerr').textContent='';
+        setTimeout(function(){if(S.path){goHub();}else{goTo('s-validate');}},300);
+      } else {
+        lc='';dots('l',0);
+        if(!emailOk){
+          document.getElementById('lerr').textContent='Email does not match. Please try again.';
+        } else {
+          document.getElementById('lerr').textContent='Incorrect passcode. Try again.';
+        }
+      }
+    }
+  }
+}
+
+function pdel(m){
+  if(m==='c'){cc=cc.slice(0,-1);dots('c',cc.length);}
+  else{lc=lc.slice(0,-1);dots('l',lc.length);document.getElementById('lerr').textContent='';}
+}
+
+function dots(m,n){
+  var ds=document.querySelectorAll('#'+m+'dots .pdot');
+  for(var i=0;i<ds.length;i++){if(i<n){ds[i].classList.add('on');}else{ds[i].classList.remove('on');}}
+}
+
+function doLogout(){
+  lc='';dots('l',0);
+  var le=document.getElementById('lerr');
+  if(le)le.textContent='';
+  goTo('s-login');
+}
+
+function confirmRetake(){
+  var el=document.getElementById('retake-confirm');
+  if(el){el.style.display=el.style.display==='none'?'block':'none';}
+}
+
+function doRetake(){
+  var el=document.getElementById('retake-confirm');
+  if(el)el.style.display='none';
+  startAssessment();
+}
+
+var QS=[
+  {t:'When did you find out about the betrayal?',o:[
+    {t:'Recently - I am still in shock and barely functioning',s:{v:3,st:0,w:0,r:0}},
+    {t:'A little while ago - I decided to stay but do not know how to heal',s:{v:0,st:3,w:0,r:0}},
+    {t:'Some time ago - I have been in the middle of it for a while',s:{v:0,st:1,w:2,r:0}},
+    {t:"It has been a while - I have done some work but something still is not right",s:{v:0,st:0,w:1,r:2}}
+  ]},
+  {t:'When you think about what happened, what hits you first?',o:[
+    {t:'I still cannot believe it is real - everything I knew feels like a lie',s:{v:3,st:1,w:0,r:0}},
+    {t:'I question whether staying was the right choice',s:{v:0,st:3,w:1,r:0}},
+    {t:'Anger - I feel it in ways I cannot always control',s:{v:0,st:0,w:3,r:0}},
+    {t:'I feel like I have grown but then the waves hit and I question everything',s:{v:0,st:0,w:1,r:3}}
+  ]},
+  {t:'How are you showing up in your day to day life right now?',o:[
+    {t:'I am barely surviving - going through the motions',s:{v:3,st:1,w:0,r:0}},
+    {t:'I mask being okay when really I am running on empty',s:{v:1,st:3,w:1,r:0}},
+    {t:'I snap easily - little things set me off and I do not always know why',s:{v:0,st:0,w:3,r:0}},
+    {t:'Most days I am okay but certain things still take me back',s:{v:0,st:0,w:1,r:3}}
+  ]},
+  {t:'What is your relationship with God feeling like right now?',o:[
+    {t:'I have so many questions and do not know if it is okay to bring them to Him',s:{v:3,st:1,w:0,r:0}},
+    {t:'I am praying but feel hollow - like going through the motions',s:{v:0,st:3,w:1,r:0}},
+    {t:'I am frustrated with God - I do not understand why this happened',s:{v:1,st:0,w:3,r:0}},
+    {t:'My faith has grown through this but I still have moments of doubt',s:{v:0,st:0,w:0,r:3}}
+  ]},
+  {t:'How much does your husband behavior affect how you feel each day?',o:[
+    {t:'Everything is so raw - I do not even know what I feel yet',s:{v:3,st:0,w:0,r:0}},
+    {t:'Completely - his mood determines mine. I have no anchor',s:{v:1,st:3,w:1,r:0}},
+    {t:'The small things irritate me now in ways they never used to',s:{v:0,st:1,w:3,r:0}},
+    {t:'Less than before - I am learning to separate myself from his choices',s:{v:0,st:0,w:0,r:3}}
+  ]},
+  {t:'When you think about healing, what feels most true right now?',o:[
+    {t:'I do not know where to begin - I am just trying to breathe',s:{v:3,st:0,w:0,r:0}},
+    {t:'Part of me is hopeful and part of me has resolved to never heal',s:{v:0,st:3,w:1,r:0}},
+    {t:'I think I should be further along and that frustrates me',s:{v:0,st:1,w:3,r:0}},
+    {t:'I am healing but the waves still come and sometimes shake me',s:{v:0,st:0,w:0,r:3}}
+  ]},
+  {t:'Where does the deepest pain live right now?',o:[
+    {t:'In the reality I have to accept - everything I believed was a lie',s:{v:3,st:1,w:0,r:0}},
+    {t:'In the woman I thought I would be - I always said I would leave if this happened',s:{v:0,st:3,w:0,r:0}},
+    {t:'In the anger I cannot fully explain and sometimes cannot control',s:{v:0,st:0,w:3,r:0}},
+    {t:'In the fear that just when I think I am healed, something pulls me back',s:{v:0,st:0,w:1,r:3}}
+  ]},
+  {t:'How are you sleeping, eating, and taking care of your body?',o:[
+    {t:'Barely - my body is in shock along with everything else',s:{v:3,st:0,w:0,r:0}},
+    {t:'I function but am running on empty - nothing left for me',s:{v:1,st:3,w:1,r:0}},
+    {t:'My body holds tension I am only beginning to notice',s:{v:0,st:1,w:2,r:1}},
+    {t:'I am more intentional about caring for myself than I used to be',s:{v:0,st:0,w:0,r:3}}
+  ]},
+  {t:'When you think about who you are outside of this marriage, what do you feel?',o:[
+    {t:'I do not have space for that - I am in survival mode',s:{v:3,st:1,w:0,r:0}},
+    {t:'I have lost myself - I do not know who I am outside of being his wife',s:{v:0,st:3,w:1,r:0}},
+    {t:'I know who I am but the betrayal changed something I am still figuring out',s:{v:0,st:0,w:3,r:1}},
+    {t:'I am rediscovering myself and there is something sacred about that',s:{v:0,st:0,w:0,r:3}}
+  ]},
+  {t:'What do you need most right now?',o:[
+    {t:'To be told I am not crazy and that my emotions are allowed',s:{v:3,st:0,w:0,r:0}},
+    {t:'To find an anchor that belongs to me and not to his moods',s:{v:0,st:3,w:0,r:0}},
+    {t:'To understand the root of what I am feeling so I can stop reacting',s:{v:0,st:0,w:3,r:0}},
+    {t:'To understand why the waves still come and know I am not starting over',s:{v:0,st:0,w:0,r:3}}
+  ]}
+];
+
+function startAssessment(){cq=0;ans=[];renderQ();goTo('s-assess');}
+
+function renderQ(){
+  var q=QS[cq];
+  var pct=Math.round(((cq+1)/QS.length)*100);
+  document.getElementById('qlbl').textContent='Question '+(cq+1)+' of '+QS.length;
+  document.getElementById('qpct').textContent=pct+'%';
+  document.getElementById('qprog').style.width=pct+'%';
+  document.getElementById('qtxt').textContent=q.t;
+  document.getElementById('qback').style.visibility=cq===0?'hidden':'visible';
+  var el=document.getElementById('qopts');
+  el.innerHTML='';
+  for(var i=0;i<q.o.length;i++){
+    var b=document.createElement('button');
+    b.className='opt';
+    b.textContent=q.o[i].t;
+    (function(idx){
+      b.onclick=function(){
+        ans[cq]=idx;
+        var bs=document.querySelectorAll('.opt');
+        for(var j=0;j<bs.length;j++){if(j===idx){bs[j].classList.add('sel');}else{bs[j].classList.remove('sel');}}
+        setTimeout(function(){if(cq<QS.length-1){cq++;renderQ();}else{calcPath();}},420);
+      };
+    })(i);
+    el.appendChild(b);
+  }
+}
+
+function prevQ(){if(cq>0){cq--;renderQ();}}
+
+function calcPath(){
+  var sc={v:0,st:0,w:0,r:0};
+  for(var i=0;i<ans.length;i++){
+    var s=QS[i].o[ans[i]].s;
+    sc.v+=s.v;sc.st+=s.st;sc.w+=s.w;sc.r+=s.r;
+  }
+  var best='v',bv=sc.v;
+  if(sc.st>bv){best='st';bv=sc.st;}
+  if(sc.w>bv){best='w';bv=sc.w;}
+  if(sc.r>bv){best='r';}
+  S.path=best;save();renderPath();goTo('s-path');
+}
+
+var PD={
+  v:{name:'The Survivor',desc:'You are not okay. And you do not have to be.',
+    word:'Your world has come crashing down. Your spouse cheated emotionally or physically over an extended period of time. He may have had an outside child because of it.\n\nYou are not okay.\n\nYou are not crazy. Your instincts were right. Everything you knew to be true before is now a lie and your body, your mind, and your spirit are all trying to make sense of that at the same time.\n\nGod is big enough to handle your emotions. The good, the bad, and the ugly. Bring it all.',
+    steps:['Be seen in your pain before anything else moves','Make sense of your new reality without rushing past it','Bring every unfiltered emotion to God. All of it.'],
+    rec:{p:{title:'30 Day Nervous System Reset',tag:'Your First Step',desc:'Your body is in shock. Before anything else can move, your nervous system needs stabilizing. This 30-day reset was built for exactly where you are.',link:'https://goodgirlheartbreak.com/shop/30dayreset'},s:{title:'Betrayal Code Intensive',tag:'When You Are Ready',desc:'A live 90-minute session that gives you the framework, the language, and the clarity to understand what happened and where you go from here.',link:'https://goodgirlheartbreak.com/shop/90minutelivesession'}}},
+  st:{name:'The Silent Stayer',desc:'You chose to stay. Now you need to learn how to live.',
+    word:'You are numb. You regret your choice but are part hopeful and part resolved to never heal. You mask being okay when really you are running on empty. You are affected by his moods, his emotions. You have no anchor.\n\nIt is okay to grieve the version of you that you thought would leave if something like this ever happened.\n\nYou need an anchor that is not his behavior. Your healing cannot rise and fall with what he does or does not do.',
+    steps:['Grieve the woman you thought you would be. She deserves to be mourned.','Find your anchor in God, not in his mood or his progress','Give yourself permission to heal. That is not a betrayal of your pain.'],
+    rec:{p:{title:'Betrayal Code Book',tag:'Your First Step',desc:'You are emotionally flooded, spiritually gaslit, and you need real answers, not another sermon. The Betrayal Code is a trigger interpretation system built specifically for you.',link:'https://goodgirlheartbreak.com/shop/betrayalcode'},s:{title:'Betrayal Code Intensive',tag:'Go Deeper',desc:'A live 90-minute session where Apostle Marquita walks you through the framework that has helped hundreds of women find their anchor again.',link:'https://goodgirlheartbreak.com/shop/90minutelivesession'}}},
+  w:{name:'The Wanderer',desc:'The pain did not leave. It shape-shifted.',
+    word:'You have a lot of anger and resentment at the root of your pain. You may spit out harsh and vile words. You may get easily irritated and it shows up in other areas of your life.\n\nAnger is not sin. Anger is a signal.\n\nThe ick you feel when he loads the washer wrong. The irritation when he does not respond to your text in a timely manner. Things that would have been okay before that are now an irritant. That is not your character. That is unaddressed pain looking for somewhere to land.\n\nThere is a real pain that was neglected. It is anger and resentment. And it needs to be traced back to the root.',
+    steps:['Name the root. The anger is the symptom, not the problem.','Trace it back. Follow the thread from the washer to the original wound.','Process it, do not suppress it. There is a difference.'],
+    rec:{p:{title:'Betrayal Code Intensive',tag:'Your First Step',desc:'You have unprocessed pain with nowhere to go. This live 90-minute session is direct, activating, and built to meet your anger and move it.',link:'https://goodgirlheartbreak.com/shop/90minutelivesession'},s:{title:'Betrayal Code Book',tag:'Go Deeper',desc:'The trigger interpretation system that will help you trace your reactions back to their root and finally understand what is underneath the anger.',link:'https://goodgirlheartbreak.com/shop/betrayalcode'}}},
+  r:{name:'The Rebuilder',desc:'You are further than you think.',
+    word:'There will be times where your body will send waves of what you felt when you were deep in it. Old feelings will return but it does not mean you are not healing. It means you walked through trauma and your body processes it the way or in the timing it deems you are able to recover from.\n\nYou are not going backwards.\n\nYou are going deeper.',
+    steps:['Name the wave without fear. It is not regression. It is your healing going deeper.','Ride it without drowning. There is a posture between suppressing and spiraling.','Claim how far you have come. Evidence is evidence.'],
+    rec:{p:{title:'Betrayal Code Intensive',tag:'Your Next Level',desc:'You have done the work. The Intensive will take what you have already built and push it further. You are ready for this.',link:'https://goodgirlheartbreak.com/shop/90minutelivesession'},s:{title:'30 Day Nervous System Reset',tag:'Sustain Your Healing',desc:'The waves are your nervous system completing its work. This 30-day reset gives your body the tools to process what is coming up.',link:'https://goodgirlheartbreak.com/shop/30dayreset'}}}
+};
+
+function renderPath(){
+  var p=PD[S.path];
+  document.getElementById('pathname').textContent=p.name;
+  document.getElementById('pathdesc').textContent=p.desc;
+  var wparas=p.word.split('\n\n');
+  var whtml='';
+  for(var i=0;i<wparas.length;i++){whtml+='<p style="margin-bottom:11px;">'+wparas[i]+'</p>';}
+  document.getElementById('pathword').innerHTML=whtml;
+  var sel=document.getElementById('pathsteps');
+  sel.innerHTML='';
+  for(var i=0;i<p.steps.length;i++){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;gap:13px;margin-bottom:13px;align-items:flex-start;';
+    var num=document.createElement('div');
+    num.style.cssText='font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:300;color:rgba(242,160,188,0.2);min-width:24px;line-height:1;';
+    num.textContent='0'+(i+1);
+    var txt=document.createElement('div');
+    txt.style.cssText='font-size:13px;line-height:1.7;color:var(--creamm);padding-top:2px;';
+    txt.textContent=p.steps[i];
+    row.appendChild(num);row.appendChild(txt);
+    sel.appendChild(row);
+  }
+}
+
+var DC={
+  v:[
+    {a:'You are not crazy. What you felt was real. What you know is true.',sc:'God is close to the brokenhearted and saves those who are crushed in spirit.',r:'Psalm 34:18',p:'God sees you in the rubble of this. He has not looked away. He is right here and He can handle everything you are carrying right now.',j:'What am I actually feeling right now that I have not been able to say out loud?'},
+    {a:'Your emotions are valid. Every single one of them.',sc:'Trust in Him at all times. Pour out your heart before Him. God is a refuge for us.',r:'Psalm 62:8',p:'You do not have to clean yourself up before you come to Him. The rage, the grief, the confusion. Bring it all. He is big enough.',j:'What has been the hardest part of accepting this new reality?'},
+    {a:'God is big enough to handle your emotions. The good, the bad, and the ugly.',sc:'He heals the brokenhearted and binds up their wounds.',r:'Psalm 147:3',p:'You are not too much. You are a woman walking through something that was done to her. And God is not asking you to minimize that.',j:'What do I wish someone would say to me right now that nobody is saying?'}
+  ],
+  st:[
+    {a:'It is okay to grieve the version of you that you thought would leave.',sc:'The Lord is near to all who call on Him, to all who call on Him in truth.',r:'Psalm 145:18',p:'You made the hardest decision of your life. And you woke up the next day still broken. That is not failure. That is faithfulness. And God sees it.',j:'What version of myself am I grieving that I have not given myself permission to mourn?'},
+    {a:'Staying was not weakness. It was a choice and it belongs to you.',sc:'Be strong and courageous. Do not be afraid. The Lord your God goes with you.',r:'Deuteronomy 31:6',p:'Your healing cannot rise and fall with his behavior. You need an anchor that belongs to you. That anchor is God. He is steady even when everything else is not.',j:'What does running on empty actually feel like in my body day to day?'},
+    {a:'You are allowed to not be okay even though you chose to stay.',sc:'For I am the Lord your God who takes hold of your right hand and says do not fear.',r:'Isaiah 41:13',p:'There is a part of you that has resolved to never heal. God wants to speak to that part today. Your healing is not a betrayal of your pain. It is an act of obedience.',j:'What would it mean to have an anchor that is not tied to his behavior?'}
+  ],
+  w:[
+    {a:'Your anger is a signal, not a sin.',sc:'Be angry and do not sin. Do not let the sun go down on your anger.',r:'Ephesians 4:26',p:'The irritation over the washer, the trash, the unanswered text. That is not about those things. That is your unaddressed pain looking for somewhere to land. Today we start tracing it back.',j:'What was the last small thing that made me react bigger than the situation called for? What was I really feeling?'},
+    {a:'What comes out of you is connected to what is in you. That is information, not condemnation.',sc:'Above all else guard your heart, for everything you do flows from it.',r:'Proverbs 4:23',p:'You are not a bad person because you are angry. You are a woman with unprocessed pain. And God wants to go there with you.',j:'If I could say everything I have held back since the betrayal with no consequences, what would I say?'},
+    {a:'You cannot heal what you have not identified. Today you start identifying it.',sc:'Search me, God, and know my heart. Test me and know my anxious thoughts.',r:'Psalm 139:23',p:'God is not afraid of what is at the root. He already knows it is there. He has been waiting for you to be ready to look. You are ready.',j:'What pain has never been fully addressed since the betrayal happened?'}
+  ],
+  r:[
+    {a:'A wave is not a setback. It is your healing going deeper.',sc:'Deep calls to deep at the roar of your waterfalls. All your waves and your billows have gone over me.',r:'Psalm 42:7',p:'The wave that hit you is not pulling you under. It is completing what it could not finish before. You are not going backwards. You are going deeper.',j:'What wave came recently and how did I interpret it? Was I kind to myself in that moment?'},
+    {a:'Your body processes trauma in its own timing. You are right on time.',sc:'He has made everything beautiful in its time.',r:'Ecclesiastes 3:11',p:'You are further than you think. Look back at where you started. Look at who you are now. That distance is evidence. God did that.',j:'What does healing feel like in my body now compared to where I started?'},
+    {a:'Old feelings returning does not mean old wounds reopened.',sc:'See I am doing a new thing. Now it springs up. Do you not perceive it?',r:'Isaiah 43:19',p:'What is coming up now is being released, not renewed. Your body is finishing what it started. This is healing. This is growth. You are not starting over.',j:'What has been built in me through this season that I need to acknowledge?'}
+  ]
+};
+
+var WK=[
+  {n:'Rebuild Safety in Your Body',d:'Calm your nervous system and find peace inside yourself.',dy:'Days 1 to 7'},
+  {n:'The Betrayal Brain',d:'Stop spiraling thoughts and take back control of your mind.',dy:'Days 8 to 14'},
+  {n:'The Vashti to Esther Method',d:'Reclaim your identity and reconnect with who you were before the pain.',dy:'Days 15 to 21'},
+  {n:'Rage, Shame and Grief',d:'Feel everything without guilt, collapse, or fear.',dy:'Days 22 to 28'},
+  {n:'The Self Worth Reset',d:'Rebuild confidence that is not tied to his behavior.',dy:'Days 29 to 35'},
+  {n:'Speak Without Losing Yourself',d:'Set boundaries and express needs without begging or blowing up.',dy:'Days 36 to 42'},
+  {n:'Prepare for Whatever Comes Next',d:'Whether you stay or go, you will be ready.',dy:'Days 43 to 49'},
+  {n:'Reclaim You',d:'Anchor your healing. Step into your new self with softness and strength.',dy:'Days 50 to 56'}
+];
+
+function goHub(){
+  var p=PD[S.path];
+  var day=S.day||1;
+  var dc=DC[S.path][(day-1)%DC[S.path].length];
+  var wi=Math.min(Math.floor((day-1)/7),7);
+  document.getElementById('hubgreet').textContent='Good morning, '+S.name+'.';
+  document.getElementById('hubday').textContent='Day '+day+' of 90';
+  document.getElementById('todayday').textContent='Day '+day+' of 90';
+  document.getElementById('daff').textContent=dc.a;
+  document.getElementById('dscr').textContent=dc.sc;
+  document.getElementById('dref').textContent=dc.r;
+  document.getElementById('dprop').textContent=dc.p;
+  document.getElementById('wftitle').textContent=WK[wi].n;
+  document.getElementById('wfdesc').textContent=WK[wi].d;
+  document.getElementById('jprompt').textContent=dc.j;
+  document.getElementById('rmappathname').textContent=p.name;
+  buildDropdowns();
+  renderRoadmap();
+  renderRecs();
+  goTo('s-hub');
+}
+
+function buildDropdowns(){
+  var tools=[
+    {n:'Box Breathing',w:'When you are overwhelmed, anxious, or in shock',d:'Inhale 4. Hold 4. Exhale 4. Hold 4. This is your regulation tool. Use it before you respond to anything that feels too big to handle.',c:'4 - 4 - 4 - 4',phases:['Inhale','Hold','Exhale','Hold'],dur:[4000,4000,4000,4000],lbl:['Breathe in slowly...','Hold...','Release slowly...','Hold...']},
+    {n:'4-7-8 Breathing',w:'When you need to release and let go',d:'Inhale 4. Hold 7. Exhale slowly for 8. The long hold and extended exhale go deeper than box breathing. Use this when you are transitioning, letting go of something old, or preparing for rest.',c:'4 - 7 - 8',phases:['Inhale','Hold','Exhale'],dur:[4000,7000,8000],lbl:['Breathe in slowly...','Hold...','Release slowly...']},
+    {n:'Extended Exhale',w:'When you are in grief, rage, or deep emotion',d:'Inhale 4. Exhale 8. No holds. The long exhale activates your vagus nerve and signals safety to your brain. This is the most effective tool for processing intense emotion without pushing it down.',c:'4 - 8',phases:['Inhale','Exhale'],dur:[4000,8000],lbl:['Breathe in slowly...','Release slowly...']},
+    {n:'Belly Breathing',w:'When you need to reconnect with your body',d:'Place one hand on your chest and one on your belly. Inhale deeply through your nose, let your belly rise not your chest. Exhale slowly. Trauma disconnects you from your body. This brings you back.',c:'4 - 6',phases:['Inhale','Exhale'],dur:[4000,6000],lbl:['Belly rises, not chest...','Release slowly...']}
+  ];
+  window.BR_TOOLS=tools;
+  var el=document.getElementById('bdroplist');
+  el.innerHTML='';
+  for(var i=0;i<tools.length;i++){
+    var t=tools[i];
+    var wrap=document.createElement('div');
+    wrap.className='bdrop'+(i===0?' sel':'');
+    wrap.id='bdrop'+i;
+    var hdr=document.createElement('div');
+    hdr.className='bdph';
+    (function(idx){hdr.onclick=function(){toggleDrop(idx);};})(i);
+    var left=document.createElement('div');
+    var nm=document.createElement('div');nm.className='bdpname';nm.textContent=t.n;
+    var wh=document.createElement('div');wh.className='bdpwhen';wh.textContent=t.w;
+    left.appendChild(nm);left.appendChild(wh);
+    var right=document.createElement('div');
+    right.style.cssText='display:flex;align-items:center;gap:10px;flex-shrink:0;';
+    var badge=document.createElement('div');
+    badge.className='bselb';badge.id='bsel'+i;
+    badge.textContent='Selected';
+    badge.style.display=i===0?'block':'none';
+    var chev=document.createElement('svg');
+    chev.setAttribute('viewBox','0 0 24 24');
+    chev.id='bchev'+i;
+    chev.style.cssText='width:14px;height:14px;stroke:rgba(168,212,232,0.5);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.25s;';
+    chev.style.transform=i===0?'rotate(180deg)':'rotate(0deg)';
+    var pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    pl.setAttribute('points','6 9 12 15 18 9');
+    chev.appendChild(pl);
+    right.appendChild(badge);right.appendChild(chev);
+    hdr.appendChild(left);hdr.appendChild(right);
+    var body=document.createElement('div');
+    body.className='bdpbody';body.id='bdpbody'+i;
+    body.style.display=i===0?'block':'none';
+    var desc=document.createElement('div');desc.className='bdpdesc';desc.textContent=t.d;
+    var cts=document.createElement('div');cts.className='bdpcts';cts.textContent=t.c;
+    var btn=document.createElement('button');
+    btn.className='busebtn'+(i===0?' on':'');btn.id='bbtn'+i;
+    btn.textContent=i===0?'Practicing This One':'Practice This One';
+    (function(idx){btn.onclick=function(){selBreath(idx);};})(i);
+    body.appendChild(desc);body.appendChild(cts);body.appendChild(btn);
+    wrap.appendChild(hdr);wrap.appendChild(body);
+    el.appendChild(wrap);
+  }
+}
+
+function toggleDrop(idx){
+  var body=document.getElementById('bdpbody'+idx);
+  var chev=document.getElementById('bchev'+idx);
+  var drop=document.getElementById('bdrop'+idx);
+  var isOpen=body.style.display!=='none';
+  for(var i=0;i<4;i++){
+    var b=document.getElementById('bdpbody'+i);
+    var c=document.getElementById('bchev'+i);
+    var d=document.getElementById('bdrop'+i);
+    if(b)b.style.display='none';
+    if(c)c.style.transform='rotate(0deg)';
+    if(d)d.classList.remove('open');
+  }
+  if(!isOpen){
+    body.style.display='block';
+    chev.style.transform='rotate(180deg)';
+    drop.classList.add('open');
+  }
+}
+
+function selBreath(idx){
+  if(isBr)stopBr();
+  selTool=idx;
+  for(var i=0;i<4;i++){
+    var sel=document.getElementById('bsel'+i);
+    var btn=document.getElementById('bbtn'+i);
+    var drop=document.getElementById('bdrop'+i);
+    if(sel)sel.style.display=i===idx?'block':'none';
+    if(btn){btn.textContent=i===idx?'Practicing This One':'Practice This One';if(i===idx){btn.classList.add('on');}else{btn.classList.remove('on');}}
+    if(drop){if(i===idx){drop.classList.add('sel');}else{drop.classList.remove('sel');}}
+  }
+  document.getElementById('brtoolname').textContent=window.BR_TOOLS[idx].n;
+  document.getElementById('brword').textContent='Tap';
+  document.getElementById('brct').textContent='to begin';
+  document.getElementById('brphlbl').textContent='Tap the circle above to start';
+}
+
+function stopBr(){
+  isBr=false;clearTimeout(brT);
+  document.getElementById('bring').classList.remove('go');
+  document.getElementById('brbtn').textContent='Start Breathing';
+  document.getElementById('brword').textContent='Tap';
+  document.getElementById('brct').textContent='to begin';
+  document.getElementById('brphlbl').textContent='Tap the circle above to start';
+}
+
+function toggleBr(){
+  if(isBr){stopBr();return;}
+  isBr=true;brS=0;
+  document.getElementById('bring').classList.add('go');
+  document.getElementById('brbtn').textContent='Stop Breathing';
+  runBr();
+}
+
+function runBr(){
+  if(!isBr)return;
+  var tool=window.BR_TOOLS?window.BR_TOOLS[selTool]:null;
+  if(!tool)return;
+  var ph=brS%tool.phases.length;
+  document.getElementById('brword').textContent=tool.phases[ph];
+  document.getElementById('brct').textContent=tool.c.split(' - ')[ph]+' counts';
+  document.getElementById('brphlbl').textContent=tool.lbl[ph];
+  brS++;
+  brT=setTimeout(runBr,tool.dur[ph]);
+}
+
+function restartWeek(weekIndex){
+  var startDay=(weekIndex*7)+1;
+  S.day=startDay;
+  save();
+  goHub();
+  goTo('s-roadmap');
+  renderRoadmap();
+}
+
+function renderRoadmap(){
+  var day=S.day||1;
+  var cw=Math.min(Math.floor((day-1)/7),7);
+  var el=document.getElementById('rmaplist');
+  el.innerHTML='';
+  var ph1=document.createElement('div');ph1.className='rmaptitle';ph1.textContent='Phase 1 - Reclaim You - Days 1 to 60';el.appendChild(ph1);
+  for(var i=0;i<WK.length;i++){
+    var isA=i===cw&&day<=60;var isC=i<cw||day>60;
+    var row=document.createElement('div');row.className='rmaprow';
+    var col=document.createElement('div');col.className='rmapcol';
+    var node=document.createElement('div');
+    node.className='rmapnode'+(isA?' act':isC?' done':'');
+    col.appendChild(node);
+    if(i<WK.length-1){var line=document.createElement('div');line.className='rmapline'+(isC?' done':isA?' act':'');col.appendChild(line);}
+    var card=document.createElement('div');
+    card.className='rmapcard'+(isA?' act':isC?' done':'');
+    var lcolor=isA?'var(--rose)':isC?'var(--blue)':'rgba(107,45,62,0.45)';
+    var lbl=document.createElement('div');lbl.className='rmaplbl';lbl.style.color=lcolor;lbl.textContent=isA?'Current Week':isC?'Complete':'Upcoming';
+    var nm=document.createElement('div');nm.className='rmapname';nm.textContent='Week '+(i+1)+' - '+WK[i].n;
+    var ds=document.createElement('div');ds.className='rmapdesc';ds.textContent=WK[i].d;
+    var dy=document.createElement('div');dy.className='rmapdays';dy.style.color=lcolor;dy.style.opacity='0.7';dy.textContent=WK[i].dy;
+    card.appendChild(lbl);card.appendChild(nm);card.appendChild(ds);card.appendChild(dy);
+    if(isC){
+      var restartWrap=document.createElement('div');
+      restartWrap.style.cssText='margin-top:10px;padding-top:10px;border-top:1px solid rgba(168,212,232,0.1);';
+      var restartBtn=document.createElement('button');
+      restartBtn.style.cssText='background:transparent;border:1px solid rgba(168,212,232,0.25);border-radius:6px;color:var(--blue);font-family:Jost,sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:all 0.2s;width:100%;';
+      restartBtn.textContent='Restart This Week';
+      (function(idx){
+        restartBtn.onclick=function(){
+          var confirmEl=document.getElementById('restart-confirm-'+idx);
+          if(confirmEl){confirmEl.style.display=confirmEl.style.display==='none'?'block':'none';}
+        };
+      })(i);
+      var confirmDiv=document.createElement('div');
+      confirmDiv.id='restart-confirm-'+i;
+      confirmDiv.style.cssText='display:none;margin-top:10px;text-align:center;';
+      var confirmTxt=document.createElement('div');
+      confirmTxt.style.cssText='font-size:12px;color:var(--creamm);margin-bottom:10px;line-height:1.5;';
+      confirmTxt.textContent='This will reset your roadmap to the start of this week. Your journal entries and vents will stay saved. Continue?';
+      var btnRow=document.createElement('div');
+      btnRow.style.cssText='display:flex;gap:8px;';
+      var yesBtn=document.createElement('button');
+      yesBtn.style.cssText='flex:1;background:linear-gradient(135deg,var(--rosed),var(--rose));color:var(--base);border:none;padding:10px;font-family:Jost,sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;';
+      yesBtn.textContent='Yes, Restart';
+      (function(idx){yesBtn.onclick=function(){restartWeek(idx);};})(i);
+      var noBtn=document.createElement('button');
+      noBtn.style.cssText='flex:1;background:transparent;color:var(--creamm);border:1px solid rgba(242,160,188,0.15);padding:10px;font-family:Jost,sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;';
+      noBtn.textContent='Cancel';
+      (function(idx){noBtn.onclick=function(){var el=document.getElementById('restart-confirm-'+idx);if(el)el.style.display='none';};})(i);
+      btnRow.appendChild(yesBtn);btnRow.appendChild(noBtn);
+      confirmDiv.appendChild(confirmTxt);confirmDiv.appendChild(btnRow);
+      restartWrap.appendChild(restartBtn);restartWrap.appendChild(confirmDiv);
+      card.appendChild(restartWrap);
+    }
+    row.appendChild(col);row.appendChild(card);el.appendChild(row);
+  }
+  var rA=day>56&&day<=60;var rC=day>60;
+  var rrow=document.createElement('div');rrow.className='rmaprow';
+  var rcol=document.createElement('div');rcol.className='rmapcol';
+  var rnode=document.createElement('div');rnode.className='rmapnode'+(rA?' act':rC?' done':'');
+  rcol.appendChild(rnode);
+  var rcard=document.createElement('div');rcard.className='rmapcard'+(rA?' act':rC?' done':'');
+  var rlc=rA?'var(--rose)':rC?'var(--blue)':'rgba(107,45,62,0.45)';
+  var rlbl=document.createElement('div');rlbl.className='rmaplbl';rlbl.style.color=rlc;rlbl.textContent=rA?'Current':rC?'Complete':'Upcoming';
+  var rnm=document.createElement('div');rnm.className='rmapname';rnm.textContent='Reflection and Integration';
+  var rds=document.createElement('div');rds.className='rmapdesc';rds.textContent='Look back. Receive what God did. Be proud of how far you have come.';
+  var rdy=document.createElement('div');rdy.className='rmapdays';rdy.style.color='rgba(242,160,188,0.4)';rdy.style.opacity='0.7';rdy.textContent='Days 57 to 60';
+  rcard.appendChild(rlbl);rcard.appendChild(rnm);rcard.appendChild(rds);rcard.appendChild(rdy);
+  rrow.appendChild(rcol);rrow.appendChild(rcard);el.appendChild(rrow);
+  var pdiv=document.createElement('div');pdiv.className='phdiv';
+  var l1=document.createElement('div');l1.className='phdivl';
+  var c=document.createElement('div');c.className='phdivc';
+  var l2=document.createElement('div');l2.className='phdivl';
+  pdiv.appendChild(l1);pdiv.appendChild(c);pdiv.appendChild(l2);el.appendChild(pdiv);
+  var ph2=document.createElement('div');ph2.className='rmaptitle';ph2.textContent='Phase 2 - 30 Day Nervous System Reset - Days 61 to 90';el.appendChild(ph2);
+  var p2=[{n:'Body Reset',d:'Stabilize your nervous system and release what the first 60 days stirred up.',dy:'Days 61 to 70',start:61},{n:'Mind Reset',d:'Rewire the thought patterns that kept you stuck and build new ones.',dy:'Days 71 to 80',start:71},{n:'Spirit Reset',d:'Anchor everything in God. Step fully into who you are becoming.',dy:'Days 81 to 90',start:81}];
+  for(var i=0;i<p2.length;i++){
+    var w=p2[i];
+    var isA2=day>=w.start&&day<w.start+10;var isC2=day>=w.start+10;
+    var row2=document.createElement('div');row2.className='rmaprow';
+    var col2=document.createElement('div');col2.className='rmapcol';
+    var node2=document.createElement('div');node2.className='rmapnode'+(isA2?' act':isC2?' done':'');
+    col2.appendChild(node2);
+    if(i<p2.length-1){var line2=document.createElement('div');line2.className='rmapline'+(isC2?' done':isA2?' act':'');col2.appendChild(line2);}
+    var card2=document.createElement('div');card2.className='rmapcard'+(isA2?' act':isC2?' done':'');
+    var lc2=isA2?'var(--rose)':isC2?'var(--blue)':'rgba(107,45,62,0.45)';
+    var lbl2=document.createElement('div');lbl2.className='rmaplbl';lbl2.style.color=lc2;lbl2.textContent=isA2?'Current Week':isC2?'Complete':'Upcoming';
+    var nm2=document.createElement('div');nm2.className='rmapname';nm2.textContent=w.n;
+    var ds2=document.createElement('div');ds2.className='rmapdesc';ds2.textContent=w.d;
+    var dy2=document.createElement('div');dy2.className='rmapdays';dy2.style.color=lc2;dy2.style.opacity='0.7';dy2.textContent=w.dy;
+    card2.appendChild(lbl2);card2.appendChild(nm2);card2.appendChild(ds2);card2.appendChild(dy2);
+    row2.appendChild(col2);row2.appendChild(card2);el.appendChild(row2);
+  }
+}
+
+function renderRecs(){
+  var r=PD[S.path].rec;
+  var el=document.getElementById('reclist');
+  el.innerHTML='';
+  var rc1=document.createElement('div');rc1.className='reccard';
+  var t1=document.createElement('div');t1.className='rectag';t1.textContent=r.p.tag;
+  var n1=document.createElement('div');n1.className='rectitle';n1.textContent=r.p.title;
+  var d1=document.createElement('div');d1.className='recdesc';d1.textContent=r.p.desc;
+  var a1=document.createElement('a');a1.href=r.p.link;a1.target='_blank';a1.className='btn btnp';a1.style.display='block';a1.textContent='Get Access';
+  rc1.appendChild(t1);rc1.appendChild(n1);rc1.appendChild(d1);rc1.appendChild(a1);
+  var rc2=document.createElement('div');rc2.className='card';
+  var t2=document.createElement('div');t2.className='rectag';t2.textContent=r.s.tag;
+  var n2=document.createElement('div');n2.style.cssText='font-family:"Cormorant Garamond",serif;font-size:21px;font-style:italic;color:var(--cream);margin-bottom:7px;';n2.textContent=r.s.title;
+  var d2=document.createElement('div');d2.className='recdesc';d2.textContent=r.s.desc;
+  var a2=document.createElement('a');a2.href=r.s.link;a2.target='_blank';a2.className='btn btno';a2.style.display='block';a2.style.marginTop='0';a2.textContent='Learn More';
+  rc2.appendChild(t2);rc2.appendChild(n2);rc2.appendChild(d2);rc2.appendChild(a2);
+  var fin=document.createElement('div');fin.style.cssText='background:linear-gradient(135deg,rgba(168,212,232,0.07),rgba(242,160,188,0.05));border:1px solid rgba(168,212,232,0.13);border-radius:13px;padding:24px;text-align:center;margin-top:4px;';
+  var fn=document.createElement('div');fn.style.cssText='font-family:"Cormorant Garamond",serif;font-size:18px;font-style:italic;color:var(--cream);margin-bottom:7px;';fn.textContent='You deserve to heal.';
+  var fb=document.createElement('div');fb.style.cssText='font-size:14px;line-height:1.85;color:var(--creamm);';fb.textContent='Who you are is more than enough. These resources exist to remind you of that every single day.';
+  fin.appendChild(fn);fin.appendChild(fb);
+  el.appendChild(rc1);el.appendChild(rc2);el.appendChild(fin);
+}
+
+function saveJ(){
+  var e=document.getElementById('jentry').value.trim();
+  if(!e)return;
+  S.j=S.j||{};
+  var k=Date.now().toString();
+  var promptEl=document.getElementById('jprompt');
+  var prompt=promptEl?promptEl.textContent:'';
+  S.j[k]={text:e,date:new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),day:S.day,prompt:prompt};
+  save();document.getElementById('jentry').value='';
+  alert('Saved. Your words belong to you.');
+}
+
+function renderJHistory(){
+  var entries=Object.entries(S.j||{}).sort(function(a,b){return Number(b[0])-Number(a[0]);});
+  var list=document.getElementById('jlist');
+  var empty=document.getElementById('jempty');
+  var count=document.getElementById('jcount');
+  list.innerHTML='';
+  if(!entries.length){empty.style.display='block';count.textContent='0 entries';return;}
+  empty.style.display='none';
+  count.textContent=entries.length+(entries.length===1?' entry':' entries');
+  for(var i=0;i<entries.length;i++){
+    var k=entries[i][0];var v=entries[i][1];
+    var card=document.createElement('div');card.className='jecard';
+    var dt=document.createElement('div');dt.className='jedate';dt.textContent=v.date+' - Day '+(v.day||1);
+    card.appendChild(dt);
+    if(v.prompt){
+      var pr=document.createElement('div');
+      pr.style.cssText='font-family:"Cormorant Garamond",serif;font-size:14px;font-style:italic;color:var(--rose);opacity:0.8;margin-bottom:8px;line-height:1.5;';
+      pr.textContent=v.prompt;
+      card.appendChild(pr);
+    }
+    var tx=document.createElement('div');tx.className='jetext';tx.textContent=v.text.length>200?v.text.substring(0,200)+'...':v.text;
+    var db=document.createElement('button');db.className='delbtn';db.textContent='Delete';
+    (function(key){db.onclick=function(){delete S.j[key];save();renderJHistory();};})(k);
+    card.appendChild(tx);card.appendChild(db);
+    list.appendChild(card);
+  }
+}
+
+function saveVent(){
+  var t=document.getElementById('vententry').value.trim();
+  if(!t)return;
+  S.vents=S.vents||[];
+  S.vents.unshift({text:t,date:new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})});
+  save();document.getElementById('vententry').value='';
+  renderVents();alert('Saved to your vent history.');
+}
+
+function renderVents(){
+  var vents=S.vents||[];
+  var list=document.getElementById('vlist');
+  var empty=document.getElementById('vempty');
+  var count=document.getElementById('vcount');
+  list.innerHTML='';
+  if(!vents.length){empty.style.display='block';count.textContent='0 entries';return;}
+  empty.style.display='none';
+  count.textContent=vents.length+(vents.length===1?' entry':' entries');
+  for(var i=0;i<vents.length;i++){
+    var v=vents[i];
+    var card=document.createElement('div');card.className='vcard';
+    var dt=document.createElement('div');dt.className='vdate';dt.textContent=v.date+' at '+v.time;
+    var tx=document.createElement('div');tx.className='vtext';tx.textContent=v.text.length>150?v.text.substring(0,150)+'...':v.text;
+    var db=document.createElement('button');db.className='delbtn';db.textContent='Delete';
+    (function(idx){db.onclick=function(){S.vents.splice(idx,1);save();renderVents();};})(i);
+    card.appendChild(dt);card.appendChild(tx);card.appendChild(db);
+    list.appendChild(card);
+  }
+}
+
+function renderProfile(){
+  document.getElementById('pname').textContent=S.name||'Not set';
+  document.getElementById('pemail').textContent=S.email||'Not set';
+  document.getElementById('ppath').textContent=S.path?PD[S.path].name:'Not assessed yet';
+}
+
+function updEmail(){
+  var e=document.getElementById('newemail').value.trim();
+  var msg=document.getElementById('emsg');
+  if(!e){msg.textContent='Please enter a valid email.';msg.style.color='var(--rosed)';return;}
+  S.email=e;save();document.getElementById('newemail').value='';
+  document.getElementById('pemail').textContent=e;
+  msg.textContent='Email updated.';msg.style.color='var(--blue)';
+  setTimeout(function(){msg.textContent='';},3000);
+}
+
+function updCode(){
+  var curr=document.getElementById('curcode').value.trim();
+  var newc=document.getElementById('newcode').value.trim();
+  var msg=document.getElementById('cmsg');
+  if(curr!==S.passcode){msg.textContent='Current passcode is incorrect.';msg.style.color='var(--rosed)';return;}
+  if(newc.length!==4||!/^\d{4}$/.test(newc)){msg.textContent='New passcode must be 4 digits.';msg.style.color='var(--rosed)';return;}
+  S.passcode=newc;save();
+  document.getElementById('curcode').value='';document.getElementById('newcode').value='';
+  msg.textContent='Passcode updated.';msg.style.color='var(--blue)';
+  setTimeout(function(){msg.textContent='';},3000);
+}
+
+function resetCode(){
+  var email=document.getElementById('resetemail').value.trim();
+  var msg=document.getElementById('rmsg');
+  if(email.toLowerCase()===S.email.toLowerCase()){
+    S.passcode='1234';save();
+    msg.textContent='Passcode reset to 1234. Please update it after logging in.';msg.style.color='var(--blue)';
+    document.getElementById('resetemail').value='';
+  } else {
+    msg.textContent='Email does not match our records.';msg.style.color='var(--rosed)';
+  }
+  setTimeout(function(){msg.textContent='';},5000);
+}
+
+function toggleRestore(){
+  var panel=document.getElementById('restore-panel');
+  if(panel){panel.style.display=panel.style.display==='none'?'block':'none';}
+}
+
+function loginRestore(){
+  var input=document.getElementById('login-restore-input');
+  var msg=document.getElementById('login-restore-msg');
+  if(!input||!input.value.trim()){
+    if(msg){msg.textContent='Please paste your backup code.';msg.style.color='var(--rosed)';}
+    return;
+  }
+  var code=input.value.trim();
+  if(code.indexOf('SEEN-')!==0){
+    if(msg){msg.textContent='That does not look like a valid SEEN backup code.';msg.style.color='var(--rosed)';}
+    return;
+  }
+  try{
+    var encoded=code.slice(5);
+    var data=decodeURIComponent(escape(atob(encoded)));
+    var parsed=JSON.parse(data);
+    S=parsed;
+    save();
+    input.value='';
+    var panel=document.getElementById('restore-panel');
+    if(panel)panel.style.display='none';
+    if(msg)msg.textContent='';
+    if(S.path){goHub();}else{goTo('s-validate');}
+  }catch(e){
+    if(msg){msg.textContent='Could not restore. Please check your backup code and try again.';msg.style.color='var(--rosed)';}
+  }
+}
+
+function genBackup(){
+  var data=JSON.stringify(S);
+  var encoded=btoa(unescape(encodeURIComponent(data)));
+  var code='SEEN-'+encoded;
+  var el=document.getElementById('backup-code');
+  var disp=document.getElementById('backup-display');
+  if(el)el.textContent=code;
+  if(disp)disp.style.display='block';
+}
+
+function restoreBackup(){
+  var input=document.getElementById('restore-input');
+  var msg=document.getElementById('restore-msg');
+  if(!input||!input.value.trim()){
+    if(msg){msg.textContent='Please paste your backup code.';msg.style.color='var(--rosed)';}
+    return;
+  }
+  var code=input.value.trim();
+  if(code.indexOf('SEEN-')!==0){
+    if(msg){msg.textContent='That does not look like a valid SEEN backup code.';msg.style.color='var(--rosed)';}
+    return;
+  }
+  try{
+    var encoded=code.slice(5);
+    var data=decodeURIComponent(escape(atob(encoded)));
+    var parsed=JSON.parse(data);
+    S=parsed;
+    save();
+    input.value='';
+    if(msg){msg.textContent='Account restored. Welcome back.';msg.style.color='var(--blue)';}
+    setTimeout(function(){
+      if(msg)msg.textContent='';
+      renderProfile();
+    },3000);
+  }catch(e){
+    if(msg){msg.textContent='Could not restore. Please check your backup code.';msg.style.color='var(--rosed)';}
+  }
+}
+
+window.addEventListener('load',function(){
+  load();
+  renderQ();
+  buildDropdowns();
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js').then(function(reg){
+      console.log('SW registered');
+    }).catch(function(err){
+      console.log('SW error:', err);
+    });
+  }
+});
+
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  deferredPrompt=e;
+  var bar=document.getElementById('install-bar');
+  if(bar)bar.style.display='flex';
+});
+
+window.addEventListener('appinstalled',function(){
+  var bar=document.getElementById('install-bar');
+  if(bar)bar.style.display='none';
+  deferredPrompt=null;
+});
+
+function installApp(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(r){
+    deferredPrompt=null;
+    var bar=document.getElementById('install-bar');
+    if(bar)bar.style.display='none';
+  });
+}
+</script>
+</body>
+</html>
