@@ -615,12 +615,22 @@ body{background:var(--base);color:var(--cream);font-family:Jost,sans-serif;font-
       <button class="btn btno" style="margin-top:8px;" onclick="restoreBackup()">Restore My Account</button>
       <div id="restore-msg" class="smsg"></div>
     </div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="slbl">Jump to a Day</div>
+      <div class="bt" style="margin-bottom:14px;font-size:13px;"><p>Use this to preview what any day of your journey looks like. Enter any day from 1 to 90.</p></div>
+      <div class="inwrap" style="margin-bottom:0;">
+        <label class="inlbl">Day Number</label>
+        <input id="dayjump" type="number" min="1" max="90" placeholder="Enter day 1 to 90" class="infield"/>
+      </div>
+      <button class="btn btnp" style="margin-top:10px;" onclick="jumpToDay()">Go to This Day</button>
+      <div id="dayjump-msg" class="smsg"></div>
+    </div>
     <button class="btnd" onclick="doLogout()" style="margin-top:8px;">Log Out</button>
   </div>
 </div>
 
 <script>
-var S={name:'',email:'',passcode:'',path:null,day:1,j:{},vents:[]};
+var S={name:'',email:'',passcode:'',path:null,day:1,j:{},vents:[],lastOpened:null};
 var cc='',lc='',cq=0,ans=[],isBr=false,brT=null,brS=0,selTool=0,openDrop=-1;
 
 function save(){try{localStorage.setItem('seen6',JSON.stringify(S));}catch(e){}}
@@ -1301,6 +1311,23 @@ function loginRestore(){
   }
 }
 
+function jumpToDay(){
+  var input=document.getElementById('dayjump');
+  var msg=document.getElementById('dayjump-msg');
+  var day=parseInt(input.value);
+  if(!day||day<1||day>90){
+    if(msg){msg.textContent='Please enter a day between 1 and 90.';msg.style.color='var(--rosed)';}
+    return;
+  }
+  S.day=day;
+  save();
+  if(msg){msg.textContent='Jumped to Day '+day+'. Go to Home to see your journey.';msg.style.color='var(--blue)';}
+  setTimeout(function(){
+    if(msg)msg.textContent='';
+    goHub();
+  },1500);
+}
+
 function genBackup(){
   var data=JSON.stringify(S);
   var encoded=btoa(unescape(encodeURIComponent(data)));
@@ -1340,8 +1367,27 @@ function restoreBackup(){
   }
 }
 
+function advanceDay(){
+  if(!S.path)return;
+  var now=Date.now();
+  var msIn24hrs=24*60*60*1000;
+  if(!S.lastOpened){
+    S.lastOpened=now;
+    save();
+    return;
+  }
+  var elapsed=now-S.lastOpened;
+  if(elapsed>=msIn24hrs){
+    var daysElapsed=1;
+    S.day=Math.min((S.day||1)+daysElapsed,90);
+    S.lastOpened=now;
+    save();
+  }
+}
+
 window.addEventListener('load',function(){
   load();
+
   renderQ();
   buildDropdowns();
   if('serviceWorker' in navigator){
