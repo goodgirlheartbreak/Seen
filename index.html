@@ -275,8 +275,20 @@ body{background:var(--base);color:var(--cream);font-family:Jost,sans-serif;font-
     </div>
     <div id="lerr" class="emsg" style="text-align:center;margin-top:14px;"></div>
 
-    <div style="margin-top:24px;text-align:center;">
+    <div style="margin-top:24px;text-align:center;display:flex;flex-direction:column;gap:10px;">
       <button onclick="toggleRestore()" style="background:none;border:none;color:var(--creamm);font-family:Jost,sans-serif;font-size:12px;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Restore from backup code</button>
+      <button onclick="toggleLoginReset()" style="background:none;border:none;color:var(--rosed);font-family:Jost,sans-serif;font-size:12px;letter-spacing:0.1em;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Forgot your passcode?</button>
+    </div>
+
+    <div id="login-reset-panel" style="display:none;margin-top:20px;background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:12px;padding:20px;">
+      <div style="font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--rose);opacity:0.6;margin-bottom:8px;">Reset Your Passcode</div>
+      <div style="font-size:13px;color:var(--creamm);line-height:1.7;margin-bottom:14px;">Confirm your email to reset your passcode to 1234.</div>
+      <div class="inwrap" style="margin-bottom:0;">
+        <label class="inlbl">Your Email Address</label>
+        <input id="login-reset-email" type="email" placeholder="Enter your email" class="infield"/>
+      </div>
+      <button class="btn btnp" style="margin-top:10px;" onclick="loginResetCode()">Reset My Passcode</button>
+      <div id="login-reset-msg" class="smsg" style="margin-top:8px;"></div>
     </div>
 
     <div id="restore-panel" style="display:none;margin-top:20px;background:var(--surf);border:1px solid rgba(107,45,62,0.5);border-radius:12px;padding:20px;">
@@ -1378,6 +1390,33 @@ function resetCode(){
     msg.textContent='Email does not match our records.';msg.style.color='var(--rosed)';
   }
   setTimeout(function(){msg.textContent='';},5000);
+}
+
+function toggleLoginReset(){
+  var panel=document.getElementById('login-reset-panel');
+  if(panel){panel.style.display=panel.style.display==='none'?'block':'none';}
+}
+
+function loginResetCode(){
+  var email=document.getElementById('login-reset-email');
+  var msg=document.getElementById('login-reset-msg');
+  if(!email||!email.value.trim()){
+    if(msg){msg.textContent='Please enter your email.';msg.style.color='var(--rosed)';}
+    return;
+  }
+  if(email.value.trim().toLowerCase()===S.email.toLowerCase()){
+    S.passcode='1234';
+    save();
+    email.value='';
+    if(msg){msg.textContent='Passcode reset to 1234. You can now log in.';msg.style.color='var(--blue)';}
+    setTimeout(function(){
+      if(msg)msg.textContent='';
+      var panel=document.getElementById('login-reset-panel');
+      if(panel)panel.style.display='none';
+    },3000);
+  } else {
+    if(msg){msg.textContent='Email does not match our records.';msg.style.color='var(--rosed)';}
+  }
 }
 
 function toggleRestore(){
